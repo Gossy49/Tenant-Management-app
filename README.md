@@ -7,4 +7,4 @@ A Python-based application for managing apartment rentals, tenant payments, leas
 
 ## How to run
 ```bash
-python App.py
+python3 App.py
