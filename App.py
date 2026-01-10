@@ -12,6 +12,9 @@ tenants = [
     "payments": [{
         "amount": 20000,
         "date": "2027-03-23" 
+    }, {
+         "amount": 40000,
+        "date": "2027-03-28"       
     }],   
     "due_date" : "20th June 2026",},
 
@@ -93,10 +96,6 @@ def view_tenants(tenants_list):
                  
             
 
-            
-
-
-
             #print out all info of selected teanant. 
             print(
                 f"Name: {tenant_name}\n"
@@ -107,11 +106,26 @@ def view_tenants(tenants_list):
                 f"Balance Amount: ₦{remaining_amount}\n"
                 f"Overpaid Amount: ₦{overpaid}\n"
                 f"Overpaid Status: {overpaid_status}\n"
-                f"Due Date: {tenant_dd}"
+                f"Due Date: {tenant_dd}\n"
                 )
+            
 
             # Here the Land lady or tenant will be able view history of payments for the rented apartment.
-            # payment_history = input ("Do you wish to view Payment History (yes/no): ").lower()
+            payment_history = input ("Do you wish to view Payment History (yes/no): ").lower()
+            
+            #goal is the user inputs yes we print our the amount paid and the date when it was paid
+            if payment_history == "yes":
+                #goal extract the content of the payements list
+                history = selected_tenant["payments"]
+                # looping through all payments, dates and print then printing them out. using the enumerate 
+                #function to for the numbering
+                for i, all_payments in enumerate(history,1):
+                    history_amount= all_payments["amount"]
+                    history_date = all_payments["date"]
+                    print(
+                     f"{i}. Amount: ₦{history_amount}\n"
+                     f"     Date: {history_date}\n"
+                 )
 
             
 
