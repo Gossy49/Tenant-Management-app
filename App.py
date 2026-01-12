@@ -1,3 +1,14 @@
+#add a dict with building and adress
+buildings = [
+    {   "name": "Buiding 1",
+        "address": "Kujawska 10 "
+    },
+    {   "name": "Buiding 2",
+        "address": "Zamenhofa 13"
+    }, 
+]
+
+
 # make a tenant "list" with tenant info and inside list key payments should also be list of dicts containing history of  payments
 #  which will have amout and date as the keys
 tenants = [
@@ -18,20 +29,33 @@ tenants = [
     }],   
     "due_date" : "20th June 2026",},
 
+# updated the payment section for mary to perfomr the completed.
     {"name" :'Mary Jay',
     "apartment_number": 2,
     "apartment_type": "1 Bedroom flat",
     "rent_amount": 350000,
-    "amount_paid": 25000,
+    "payments": [{
+        "amount": 300000,
+        "date": "2027-03-23" 
+    }, {
+         "amount": 50000,
+        "date": "2027-03-28"       
+    }],   
     "due_date" : "20th June 2026",},
 
+#assumed all have the same due date and we asssume Glory overpaid
     {"name" :"Glory flares",
     "apartment_number": 3,
     "apartment_type": "1 Bedroom flat",
     "rent_amount": 350000,
-    "amount_paid": 10000,
-    "due_date" : "20th June 2026.",},
-
+    "payments": [{
+        "amount": 350000,
+        "date": "2027-03-23" 
+    }, {
+         "amount": 35000,
+        "date": "2027-03-28"       
+    }],   
+    "due_date" : "20th June 2026",}
 ]
 
 
@@ -53,7 +77,7 @@ def view_tenants(tenants_list):
     try: 
         # asking user to input an index to get the info of the tenant they wish to see
         # then since the index printed will be from 1 to lenght of tenant_list then we subtract -1 to match the index of the list:
-        user_input = int(input("Input a tenant index number: ") ) - 1
+        user_input = int(input("\nInput a tenant index number: ") ) - 1
 
         # a condition to check the int value the user entered which should be among the len of the teanant_list
         #if not return an error and inform user to input number from 1 to the length of tenants_list
@@ -92,13 +116,13 @@ def view_tenants(tenants_list):
                 remaining_amount = 0
                 overpaid += total_paid - tenant_ra
                 overpaid_status = "Yes"
-            pass
+            
                  
             
 
             #print out all info of selected teanant. 
             print(
-                f"Name: {tenant_name}\n"
+                f"\nName: {tenant_name}\n"
                 f"Apartment number: {tenant_ap_number}\n"
                 f"Apartment Type: {tenant_ap_type}\n"
                 f"Rent Amount: ₦{tenant_ra}\n"
@@ -132,6 +156,52 @@ def view_tenants(tenants_list):
 
     except : 
         print (f"Error occured!!! There are only {len(tenants_list)} Tenants in this Building, Please enter a number (e.g., 1, 2, 3).")
-        
-view_tenants(tenants)
+
+#goal a function to send house contract to selected tenant
+def send_contract():
+    pass
+#goal: a function to view Tenant Reports concerning issues faced in the house
+def tenant_report():
+    pass
+#goal:a function to send receipts to tenants after payments of rent
+def send_receipts():
+    pass
+
+#goal:function give details about tenant stautus: eg Rent expired and here we have the grace periods 
+def tenant_status():
+    pass
+#goal: display the buildings list and user could choose which building info they wish to see
+print ("             Welcome Mrs Abby   ")
+
+#loop through building list 
+for i,all_buildings in enumerate(buildings,1):
+    all_buildings_name = all_buildings["name"]
+    all_buildings_address = all_buildings["address"]
+    print (f"{i}. {all_buildings_name}\n   Address:{all_buildings_address}")
+
+app_welcome = int(input("\nEnter a building number to view more: "))-1
+
+
+#print out of all options for both Building 1 and building 2 
+if app_welcome == 0 or  app_welcome == 1:
+        print("\n")
+        print(f"       Welcome to 'Building {app_welcome + 1}'")
+        print(f"{1}. View Tenants Info ")
+        print (f"{2}. Add Tenant")
+        print (f"{3}. Send House Contract")
+        print (f"{4}. Tenant Reports")
+        print(f"{5}. Send Receipts")
+        print(f"{6}. View Tenant status")
+        print(f"{7}. Send General info to all Tenants in 'Building {app_welcome + 1}' ")
+
+
+#goal to ask user to enter an index number to choose an option above
+app_options = int(input("\nEnter a number from 1-7 to selcet and view more from options: "))      
+if app_options == 1:
+    view_tenants(tenants)
+
+
+
+
+# view_tenants(tenants)
 
