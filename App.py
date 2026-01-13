@@ -14,6 +14,9 @@ buildings = [
 tenants = [
 
     {
+    #add building 1 to all tenants that are building one. 
+    # we assume all tenant in this list are in building 1
+    "building": 1,
     "name" :'Jack Brown',
     "apartment_number": 1,
     "apartment_type": "1 Bedroom flat",
@@ -30,7 +33,8 @@ tenants = [
     "due_date" : "20th June 2026",},
 
 # updated the payment section for mary to perfomr the completed.
-    {"name" :'Mary Jay',
+    {"building": 1,
+    "name" :'Mary Jay',
     "apartment_number": 2,
     "apartment_type": "1 Bedroom flat",
     "rent_amount": 350000,
@@ -44,7 +48,8 @@ tenants = [
     "due_date" : "20th June 2026",},
 
 #assumed all have the same due date and we asssume Glory overpaid
-    {"name" :"Glory flares",
+    {"building": 1,
+    "name" :"Glory flares",
     "apartment_number": 3,
     "apartment_type": "1 Bedroom flat",
     "rent_amount": 350000,
@@ -125,10 +130,10 @@ def view_tenants(tenants_list):
                 f"\nName: {tenant_name}\n"
                 f"Apartment number: {tenant_ap_number}\n"
                 f"Apartment Type: {tenant_ap_type}\n"
-                f"Rent Amount: ₦{tenant_ra}\n"
+                f"\nRent Amount: ₦{tenant_ra}\n"
                 f"Total Amount Paid: ₦{total_paid}\n"
                 f"Balance Amount: ₦{remaining_amount}\n"
-                f"Overpaid Amount: ₦{overpaid}\n"
+                f"\nOverpaid Amount: ₦{overpaid}\n"
                 f"Overpaid Status: {overpaid_status}\n"
                 f"Due Date: {tenant_dd}\n"
                 )
@@ -171,6 +176,19 @@ def send_receipts():
 def tenant_status():
     pass
 #goal: display the buildings list and user could choose which building info they wish to see
+
+
+#function to get tenants in a certain building. 
+def get_building_tenants(tenants, selected_building):
+    
+    building_tenants = []
+    for items in tenants:
+        if items["building"] == selected_building:
+            building_tenants.append(items)
+        
+    return building_tenants
+
+
 print ("             Welcome Mrs Abby   ")
 
 #loop through building list 
@@ -179,7 +197,9 @@ for i,all_buildings in enumerate(buildings,1):
     all_buildings_address = all_buildings["address"]
     print (f"{i}. {all_buildings_name}\n   Address:{all_buildings_address}")
 
+# here user selects a building
 app_welcome = int(input("\nEnter a building number to view more: "))-1
+
 
 
 #print out of all options for both Building 1 and building 2 
@@ -195,10 +215,24 @@ if app_welcome == 0 or  app_welcome == 1:
         print(f"{7}. Send General info to all Tenants in 'Building {app_welcome + 1}' ")
 
 
+
+
+
 #goal to ask user to enter an index number to choose an option above
 app_options = int(input("\nEnter a number from 1-7 to selcet and view more from options: "))      
 if app_options == 1:
-    view_tenants(tenants)
+
+    #goal: When user selects Building 1 or 2, “View Tenants Info” shows only tenants in that building.
+    #function to get only tenants in that build is called here
+    selected_building= app_welcome + 1
+
+
+    building_tenants = get_building_tenants(tenants,selected_building)
+    # if building tenants is an empty list we assume there are no tenants there yet. 
+    if building_tenants:
+        print("No tenants found for this building yet.")
+    else:
+        view_tenants(building_tenants)
 
 
 
