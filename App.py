@@ -229,7 +229,7 @@ if app_options == 1:
 
     building_tenants = get_building_tenants(tenants,selected_building)
     # if building tenants is an empty list we assume there are no tenants there yet. 
-    if building_tenants:
+    if not building_tenants:
         print("No tenants found for this building yet.")
     else:
         view_tenants(building_tenants)
