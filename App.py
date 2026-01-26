@@ -1,3 +1,6 @@
+#importing Json
+import json 
+
 #add a dict with building and adress
 buildings = [
     {   "name": "Buiding 1",
@@ -63,7 +66,22 @@ tenants = [
     "due_date" : "20th June 2026",}
 ]
 
+#A function to save the tenants details in a Json File
+def save_tenants (t_list):
+    with open('tenants.json', 'w') as json_file:
+        json.dump(t_list,json_file,indent= 2)
 
+# goal a function to load tenants from teh json file
+def load_tenants():
+    try :
+        with open('tenants.json', 'r') as json_file:
+            data = json.load(json_file)
+            return data
+
+    except FileNotFoundError:
+        print ("File Not Found")
+        return []
+        
 
 #TODO: Function to display tenant info based on a user request by inputing index
 def view_tenants(tenants_list):
@@ -162,6 +180,45 @@ def view_tenants(tenants_list):
     except : 
         print (f"Error occured!!! There are only {len(tenants_list)} Tenants in this Building, Please enter a number (e.g., 1, 2, 3).")
 
+
+
+#function to catch error incase user input a text inplace of aparmnet number and rent amunt
+def ask_int(prompt):
+    while True:
+        try:
+            value = int(input(prompt))
+            return value
+        except ValueError:
+            print("Please enter a valid number")
+
+#goal a function to add new tenants to the app
+def add_tenant(tenants, building_selected):
+    #ask users for details of the new tenant
+    
+    name = input ("Enter a name: ")
+    
+    apartment_number = ask_int ("Enter an Apartment Number: ")
+    apartment_type = input("Enter Apartment Type: ")
+    rent_amount = ask_int("Enter Rent Amount: ")
+    due_date = input("Enter Due Date: ")
+
+    #new dict created with the new tenant info
+    new_tenant = {"building": building_selected,
+    "name" :name,
+    "apartment_number": apartment_number,
+    "apartment_type": apartment_type,
+    "rent_amount": rent_amount,
+    "payments": [],   
+    "due_date" : due_date,}
+
+    #append details to the tenant list 
+    tenants.append(new_tenant)
+    print("New Tenant Added.")
+    print("Saved under building:", new_tenant["building"])
+
+
+
+    
 #goal a function to send house contract to selected tenant
 def send_contract():
     pass
@@ -233,6 +290,13 @@ if app_options == 1:
         print("No tenants found for this building yet.")
     else:
         view_tenants(building_tenants)
+
+
+#goal to able to add the Tenant Manually from Landlady view
+elif app_options == 2 :
+    #calling the add tenant
+    selected_building= app_welcome + 1
+    add_tenant(tenants, selected_building)
 
 
 
