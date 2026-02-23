@@ -1,0 +1,6 @@
+tenants.json
+.vscode/
+__pycache__/
+It s the same tenant in.txt
+context.md
+test.py

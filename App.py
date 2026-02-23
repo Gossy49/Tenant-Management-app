@@ -11,61 +11,6 @@ buildings = [
     }, 
 ]
 
-
-# make a tenant "list" with tenant info and inside list key payments should also be list of dicts containing history of  payments
-#  which will have amout and date as the keys
-tenants = [
-
-    {
-    #add building 1 to all tenants that are building one. 
-    # we assume all tenant in this list are in building 1
-    "building": 1,
-    "name" :'Jack Brown',
-    "apartment_number": 1,
-    "apartment_type": "1 Bedroom flat",
-    "rent_amount": 350000, 
- # processing a logic instead of having a fixed amount paid the amount paid would be gotten from series of payments   
- # first we work with the payment history feature with Jack brown and leave others as fixed
-    "payments": [{
-        "amount": 20000,
-        "date": "2027-03-23" 
-    }, {
-         "amount": 40000,
-        "date": "2027-03-28"       
-    }],   
-    "due_date" : "20th June 2026",},
-
-# updated the payment section for mary to perfomr the completed.
-    {"building": 1,
-    "name" :'Mary Jay',
-    "apartment_number": 2,
-    "apartment_type": "1 Bedroom flat",
-    "rent_amount": 350000,
-    "payments": [{
-        "amount": 300000,
-        "date": "2027-03-23" 
-    }, {
-         "amount": 50000,
-        "date": "2027-03-28"       
-    }],   
-    "due_date" : "20th June 2026",},
-
-#assumed all have the same due date and we asssume Glory overpaid
-    {"building": 1,
-    "name" :"Glory flares",
-    "apartment_number": 3,
-    "apartment_type": "1 Bedroom flat",
-    "rent_amount": 350000,
-    "payments": [{
-        "amount": 350000,
-        "date": "2027-03-23" 
-    }, {
-         "amount": 35000,
-        "date": "2027-03-28"       
-    }],   
-    "due_date" : "20th June 2026",}
-]
-
 #A function to save the tenants details in a Json File
 def save_tenants (t_list):
     with open('tenants.json', 'w') as json_file:
@@ -215,6 +160,7 @@ def add_tenant(tenants, building_selected):
     tenants.append(new_tenant)
     print("New Tenant Added.")
     print("Saved under building:", new_tenant["building"])
+    
 
 
 
@@ -247,6 +193,7 @@ def get_building_tenants(tenants, selected_building):
 
 
 print ("             Welcome Mrs Abby   ")
+tenants = load_tenants()
 
 #loop through building list 
 for i,all_buildings in enumerate(buildings,1):
@@ -254,6 +201,9 @@ for i,all_buildings in enumerate(buildings,1):
     all_buildings_address = all_buildings["address"]
     print (f"{i}. {all_buildings_name}\n   Address:{all_buildings_address}")
 
+
+# load tenant info from the tenants.json file created.
+tenants = load_tenants()
 # here user selects a building
 app_welcome = int(input("\nEnter a building number to view more: "))-1
 
@@ -297,8 +247,11 @@ elif app_options == 2 :
     #calling the add tenant
     selected_building= app_welcome + 1
     add_tenant(tenants, selected_building)
+    save_tenants(tenants)
 
 
+save_tenants(tenants)
+print("Initial tenants saved to JSON.")
 
 
 # view_tenants(tenants)
