@@ -60,6 +60,7 @@ def view_tenants(tenants_list):
 
            #save the tenant info in various variables
             tenant_name      = selected_tenant["name"]
+            tenant_email     = selected_tenant["email"]
             tenant_ap_number = selected_tenant["apartment_number"]
             tenant_ap_type   = selected_tenant ["apartment_type"]
             tenant_ra        = selected_tenant ["rent_amount"]
@@ -91,6 +92,7 @@ def view_tenants(tenants_list):
             #print out all info of selected teanant. 
             print(
                 f"\nName: {tenant_name}\n"
+                f"email: {tenant_email}\n"                
                 f"Apartment number: {tenant_ap_number}\n"
                 f"Apartment Type: {tenant_ap_type}\n"
                 f"\nRent Amount: ₦{tenant_ra}\n"
@@ -141,7 +143,7 @@ def add_tenant(tenants, building_selected):
     #ask users for details of the new tenant
     
     name = input ("Enter a name: ")
-    
+    email = input ("Enter a valid Email Adress: ")
     apartment_number = ask_int ("Enter an Apartment Number: ")
     apartment_type = input("Enter Apartment Type: ")
     rent_amount = ask_int("Enter Rent Amount: ")
@@ -150,6 +152,7 @@ def add_tenant(tenants, building_selected):
     #new dict created with the new tenant info
     new_tenant = {"building": building_selected,
     "name" :name,
+    "email": email,
     "apartment_number": apartment_number,
     "apartment_type": apartment_type,
     "rent_amount": rent_amount,
@@ -171,9 +174,64 @@ def send_contract():
 #goal: a function to view Tenant Reports concerning issues faced in the house
 def tenant_report():
     pass
-#goal:a function to send receipts to tenants after payments of rent
-def send_receipts():
-    pass
+#goal:a function to send receipt of latest payment to tenants after payments of rent
+def record_payments(filtered_tenants_list,tenant_database):
+        # printing all tenants name with index 
+    print("\nTenants Available")
+
+    # loop throught the list using the length of the list of tenant and use the index from the len to able get the name from the 
+    # dict in the list
+    for i in range (len(filtered_tenants_list)):
+        tenant_names = filtered_tenants_list[i]["name"]
+        print(f"{i+1}){tenant_names}")
+    
+
+#add a try and except to avoid the code from crashing, incase when user inputs a letter or symbols. 
+
+    try: 
+        # asking user to input an index to get the info of the tenant they wish to see
+        # then since the index printed will be from 1 to lenght of tenant_list then we subtract -1 to match the index of the list:
+        user_input = int(input("\nInput a tenant index number to choose a tenant : ") ) - 1
+
+        # a condition to check the int value the user entered which should be among the len of the teanant_list
+        #if not return an error and inform user to input number from 1 to the length of tenants_list
+        if user_input < 0 or user_input>= len(filtered_tenants_list):
+            print (f"Invalid selection. Please choose a number between 1 and {len(filtered_tenants_list)}.")
+            return       
+    except: 
+        print (f"Error occured!!! There are only {len(filtered_tenants_list)} Tenants in this Building, Please enter a number (e.g., 1, 2, 3).")
+        return
+
+    # a selected_tenant which is a dict of the selected tenants user selects from the list displayed
+    tenant_selected = filtered_tenants_list [user_input ]
+    new_payment = int(input ("Enter amount: "))
+    new_paymen_date = input("Enter Date (YYYY-MM-DD): ")
+
+    new_amount_details  = {"amount": new_payment ,"date": new_paymen_date}
+    
+    tenant_selected["payments"].append(new_amount_details)
+
+    #save the tenant new Payment record without formatting the whole database. 
+    save_tenants(tenant_database)
+    print ("Payment Details was Saved Successfully")
+
+    send_process = input("Do you wish to generate Receipt Pdf and foward to email (y/n)? ").lower()
+
+    # condition to check the what user inputed previously on send process
+    if send_process == "y" :
+ 
+        latest_amount = new_payment
+        latest_date   = new_paymen_date
+        filtered_tenants_name  = tenant_selected ["name"]
+        filtered_tenants_email = tenant_selected["email"] 
+
+        print(f"\nAmount Received:₦{latest_amount} from {filtered_tenants_name}on {latest_date}. ")
+        print(f"Sending Receipt in Pdf to Email:{filtered_tenants_email}")
+
+    else: 
+        print("Email failed to Send")
+            
+
 
 #goal:function give details about tenant stautus: eg Rent expired and here we have the grace periods 
 def tenant_status():
@@ -192,8 +250,9 @@ def get_building_tenants(tenants, selected_building):
     return building_tenants
 
 
-print ("             Welcome Mrs Abby   ")
 tenants = load_tenants()
+print ("             Welcome Mrs Abby   ")
+
 
 #loop through building list 
 for i,all_buildings in enumerate(buildings,1):
@@ -216,9 +275,9 @@ if app_welcome == 0 or  app_welcome == 1:
         print(f"{1}. View Tenants Info ")
         print (f"{2}. Add Tenant")
         print (f"{3}. Send House Contract")
-        print (f"{4}. Tenant Reports")
-        print(f"{5}. Send Receipts")
-        print(f"{6}. View Tenant status")
+        print (f"{4}. Record Payments")
+        print(f"{5}. View Tenant status")
+        print(f"{6}. Tenant Reports")
         print(f"{7}. Send General info to all Tenants in 'Building {app_welcome + 1}' ")
 
 
@@ -248,10 +307,27 @@ elif app_options == 2 :
     selected_building= app_welcome + 1
     add_tenant(tenants, selected_building)
     save_tenants(tenants)
+    
 
+# For sending Receipts options
+elif app_options == 4 :
+    # making sure we are in the selected building the user needed 
+    selected_building = app_welcome + 1
 
-save_tenants(tenants)
-print("Initial tenants saved to JSON.")
+    # get the tenants  in the selected building
+    building_tenants = get_building_tenants(tenants,selected_building)
+
+    #add to give info about there being a tenant in the 
+    if not building_tenants:
+        print("No tenants found for this building yet.")
+    else:
+        record_payments(building_tenants, tenants)
+
+         
+    
+
+# save_tenants(tenants)
+# print("Initial tenants saved to JSON.")
 
 
 # view_tenants(tenants)
